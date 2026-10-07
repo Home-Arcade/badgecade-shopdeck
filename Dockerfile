@@ -28,4 +28,4 @@ RUN python /tmp/shopdeck_patches.py \
 USER 10003
 EXPOSE 9000 9001
 # 9000: Django (admin page, ninja, samurai)   9001: Flask SOAP (ecs, ias, cas)
-CMD ["sh", "-c", "python manage.py migrate --noinput && (gunicorn -b 0.0.0.0:9001 -w 2 main:app &) && exec python manage.py runserver 0.0.0.0:9000 --insecure --noreload"]
+CMD ["sh", "-c", "python manage.py migrate --noinput && (gunicorn -b 0.0.0.0:9001 -w 2 --access-logfile - --error-logfile - main:app &) && exec python manage.py runserver 0.0.0.0:9000 --insecure --noreload"]
