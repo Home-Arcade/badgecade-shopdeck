@@ -20,7 +20,14 @@ docker build -t badgecade-shopdeck .
 docker run -e SHOPDECK_SECRET_KEY=change-me -v shopdeck_data:/data -p 127.0.0.1:9000:9000 badgecade-shopdeck
 ```
 
-Port 9000 is the admin page plus ninja/samurai, 9001 is the SOAP services (ecs, ias, cas). Make an admin with `python manage.py createsuperuser`, then add the Badge Arcade title and its play item (id 4000, item code `CTR-N-HBEE`, price 0).
+Port 9000 is the admin page plus ninja/samurai, 9001 is the SOAP services (ecs, ias, cas). Make an admin with `python manage.py createsuperuser`, then add Badge Arcade and its play item in the admin page. The 3DS asks for the *ticket* title ID, not the game's:
+
+| Region | Title ID to add | Play item |
+|---|---|---|
+| Europe | `0004000D00153600` | item code `CTR-N-HBEE`, price 0 |
+| US | `0004000D00153500` | item code `CTR-N-HBEE`, price 0 |
+
+Each purchase gives 5 plays. Tested on a European 3DS, buying twice in a row works.
 
 ## License
 
