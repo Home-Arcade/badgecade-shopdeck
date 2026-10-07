@@ -25,6 +25,12 @@ patch("api/views.py", """   try:
    owned = ownedTicket.objects.create(item=aitem, ticketid=(b'\\x00\\x04'+ os.urandom(6)).hex(), owner=ds)
    res = {"transaction_results": {"transaction_result":[{"transaction_id":owned.pk,""")
 
+# A console that used another shopdeck server already has an account id
+# saved. Reuse it for the new account so the console doesn't see it change.
+patch("ecs.py", """            ds = Client3DS.objects.create(consoleid=""", """            prev = parsed['SOAP-ENV:Envelope']['SOAP-ENV:Body']['ecs:GetAccountStatus'].get('ecs:AccountId')
+            keep = {"id": int(prev)} if prev and str(prev).isdigit() and not Client3DS.objects.filter(id=int(prev)).exists() else {}
+            ds = Client3DS.objects.create(**keep, consoleid=""")
+
 # the web portal and the game download CDN aren't copied in
 patch("main.py", "import ecs, ias, cas, cdn, assetcdn\n", "import ecs, ias, cas\n")
 patch("main.py", "app.register_blueprint(cdn.ccs)\napp.register_blueprint(assetcdn.cdn)\n", "")
